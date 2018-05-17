@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+
 #include <pthread.h>
 
 #define MESSAGES 20
@@ -24,8 +25,8 @@ typedef struct jobQueue jobQueue;
 
 void QueueInit(jobQueue *q)
 {
-	q->start = -1;
-	q->finish = -1;
+	q->start = 0;
+	q->finish = 0;
 }
 
 int QueueEmpty(jobQueue q)
@@ -36,6 +37,27 @@ int QueueEmpty(jobQueue q)
 int QueueFull(jobQueue q)
 {
 	return q.start==(q.finish)%MESSAGES;
+}
+
+int QueueEnqueue(jobQueue *q, message x)
+{
+	if(QueueFull(*q))
+		return 1;
+	else
+	{
+			
+		if(QueueEmpty(*q))
+		{
+			q->start=0;
+			q->finish=0;
+		}
+		else
+		{
+			q->finish=(q->finish+1);
+		}
+		q->array[q->finish]=x;
+		return 0;
+	}
 }
 
 void inssort(double *a,int n) {
@@ -173,7 +195,7 @@ void *consumer_thread(void *args) {
 int main() {
   double *a;
   int i;
-  
+  jobQueue *myQueue;
   //mallocing array
   a = (double *)malloc(N*sizeof(double));
   if (a==NULL) {
@@ -183,6 +205,7 @@ int main() {
   message firstMessage;
   firstMessage.startOfArray = 0;
   firstMessage.finishOfArray = N;
+  QueueEnqueue(myQueue, firstMessage);
 
   // fill array with random numbers
   srand(time(NULL));
