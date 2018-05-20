@@ -205,7 +205,7 @@ int main() {
   message firstMessage;
   firstMessage.startOfArray = 0;
   firstMessage.finishOfArray = N;
-  QueueEnqueue(myQueue, firstMessage);
+  
 
   // fill array with random numbers
   srand(time(NULL));
